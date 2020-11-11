@@ -1,6 +1,7 @@
 import { tagName, layout } from '@ember-decorators/component';
 import { A } from '@ember/array';
 import Component from '@ember/component';
+import { next } from '@ember/runloop';
 
 import template from './template';
 
@@ -57,7 +58,12 @@ class THeadRow extends Component {
   }
 
   unregisterCell(cell) {
-    this.get('cells').removeObject(cell);
+    next(this, function () {
+      if (this.isDestroyed) {
+        return;
+      }
+      this.get('cells').removeObject(cell);
+    });
   }
 }
 
